@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>MySite — Bootstrap 響應式範例</title>
+
+  <!-- === SEO / 分享 / Favicon（開始） === -->
+  <meta name="description" content="我的網站簡介：一句話說明這個頁面是做什麼的。">
+  <link rel="canonical" href="https://zhankochi.github.io/kgfile/">
+  <meta name="robots" content="index, follow">
+
+  <!-- Favicon / PWA basics （放在專案根目錄）-->
+  <link rel="icon" href="./favicon.ico" sizes="any">
+  <link rel="icon" type="image/svg+xml" href="./favicon.svg">
+  <link rel="apple-touch-icon" href="./apple-touch-icon.png">
+  <!-- 可選：若建立了 manifest 檔，取消下一行註解 -->
+  <!-- <link rel="manifest" href="./site.webmanifest"> -->
+  <meta name="theme-color" content="#0d6efd">
+  <meta name="application-name" content="MySite">
+  <meta name="apple-mobile-web-app-title" content="MySite">
+
+  <!-- Open Graph / Twitter 針對分享卡片（上線後把網址改成你的實際頁面） -->
+  <meta property="og:site_name" content="MySite">
+  <meta property="og:title" content="MySite — Bootstrap 響應式範例">
+  <meta property="og:description" content="我的網站簡介：一句話說明這個頁面是做什麼的。">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://zhankochi.github.io/kgfile/">
+  <meta property="og:image" content="https://zhankochi.github.io/kgfile/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="MySite — Bootstrap 響應式範例">
+  <meta name="twitter:description" content="我的網站簡介：一句話說明這個頁面是做什麼的。">
+  <meta name="twitter:image" content="https://zhankochi.github.io/kgfile/og-image.jpg">
+  <!-- === SEO / 分享 / Favicon（結束） === -->
+
+  <!-- Bootstrap 5 CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+  <style>
+    .back-to-top {
+      position: fixed;
+      right: 16px;
+      bottom: 16px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .2s ease, transform .2s ease;
+      transform: translateY(8px);
+      z-index: 1040;
+    }
+    .back-to-top.show { opacity: 1; pointer-events: auto; transform: translateY(0); }
+  </style>
+</head>
+<body class="bg-dark text-light">
+  <!-- 導覽列 Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top">
+    <div class="container">
+      <a class="navbar-brand fw-semibold" href="#hero">MySite</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto align-items-lg-center">
+          <li class="nav-item"><a class="nav-link" href="#hero">首頁</a></li>
+          <li class="nav-item"><a class="nav-link" href="#features">功能</a></li>
+          <li class="nav-item me-2"><a class="nav-link" href="#contact">聯絡我們</a></li>
+          <li class="nav-item"><button id="themeToggle" class="btn btn-sm btn-outline-light">☀️ 淺色</button></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <main class="py-5">
+    <div class="container">
+      <!-- Hero 區塊（含按鈕示範） -->
+      <section id="hero" class="mb-5">
+        <div class="row justify-content-center">
+          <div class="col-12 col-lg-10">
+            <div class="card shadow-lg border-0">
+              <div class="card-body p-4 p-lg-5">
+                <h1 class="h3 mb-2 text-dark">哈囉，VSCode！（Bootstrap 版）</h1>
+                <p class="text-secondary mb-3">這是一個使用 Bootstrap 5 的響應式範例。縮放視窗看看版面會自動調整。</p>
+                <div class="d-flex flex-wrap gap-2">
+                  <button id="showTime" class="btn btn-primary">顯示時間</button>
+                  <button id="clear" class="btn btn-outline-secondary">清除</button>
+                </div>
+                <pre id="out" class="mt-3 p-3 bg-light-subtle border rounded-3 text-dark">（等待操作中…）</pre>
+              </div>
+              <div class="card-footer small text-muted">
+                已載入 Bootstrap 5：可用 <code>.container</code>、<code>.row</code>、<code>.col</code> 建置響應式網頁。
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 三欄卡片 Features（動態產生） -->
+      <section id="features" class="mb-5">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h2 class="h4 m-0">特色卡片</h2>
+          <div class="d-none d-md-flex gap-2 small text-secondary">
+            <span>（此區塊由 JS 動態產生，可修改 cards 陣列）</span>
+          </div>
+        </div>
+        <div class="row g-4" id="cardsRow"></div>
+      </section>
+
+      <!-- 聯絡表單（含 Bootstrap 驗證） -->
+      <section id="contact" class="mb-5">
+        <h2 class="h4 mb-3">聯絡我們</h2>
+        <div class="row">
+          <div class="col-12 col-lg-8">
+            <div class="alert alert-success d-none" id="successAlert" role="alert">已送出！這是示範，不會真的寄出。</div>
+            <form class="needs-validation" id="contactForm" novalidate>
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <label for="name" class="form-label">姓名</label>
+                  <input type="text" class="form-control" id="name" required />
+                  <div class="invalid-feedback">請輸入姓名</div>
+                </div>
+                <div class="col-md-6">
+                  <label for="email" class="form-label">Email</label>
+                  <input type="email" class="form-control" id="email" placeholder="name@example.com" required />
+                  <div class="invalid-feedback">請輸入有效 Email</div>
+                </div>
+                <div class="col-12">
+                  <label for="message" class="form-label">留言</label>
+                  <textarea class="form-control" id="message" rows="4" required></textarea>
+                  <div class="invalid-feedback">請輸入留言</div>
+                </div>
+                <div class="col-12 d-flex gap-2">
+                  <button class="btn btn-success" type="submit">送出</button>
+                  <button class="btn btn-outline-secondary" type="reset">清除</button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </section>
+
+      <footer class="text-center text-secondary small py-4">
+        已載入 Bootstrap 5：使用 Navbar、Grid、表單驗證、Smooth Scroll、主題切換與回到頂端。
+      </footer>
+    </div>
+  </main>
+
+  <!-- 回到頂端按鈕 -->
+  <button id="backToTop" class="btn btn-primary back-to-top" aria-label="回到頂端">↑</button>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // 統一在 DOMContentLoaded 後掛載所有事件，避免元素未載入
+    document.addEventListener('DOMContentLoaded', () => {
+      // ===== 按鈕示範：顯示/清除時間 =====
+      const outEl = document.getElementById('out');
+      const showBtn = document.getElementById('showTime');
+      const clearBtn = document.getElementById('clear');
+      if (showBtn && outEl) {
+        showBtn.addEventListener('click', () => {
+          outEl.textContent = '現在時間：' + new Date().toLocaleString();
+        });
+      }
+      if (clearBtn && outEl) {
+        clearBtn.addEventListener('click', () => {
+          outEl.textContent = '（已清除）';
+        });
+      }
+
+      // ===== 主題切換（亮/暗） =====
+      const THEME_KEY = 'pref-theme';
+      const bodyEl = document.body;
+      const themeToggle = document.getElementById('themeToggle');
+      let currentTheme = localStorage.getItem(THEME_KEY) || 'dark';
+      function applyTheme(theme) {
+        if (theme === 'light') {
+          bodyEl.classList.remove('bg-dark', 'text-light');
+          bodyEl.classList.add('bg-light', 'text-dark');
+          themeToggle?.classList.remove('btn-outline-light');
+          themeToggle?.classList.add('btn-outline-dark');
+          themeToggle && (themeToggle.textContent = '🌙 深色');
+        } else {
+          bodyEl.classList.remove('bg-light', 'text-dark');
+          bodyEl.classList.add('bg-dark', 'text-light');
+          themeToggle?.classList.remove('btn-outline-dark');
+          themeToggle?.classList.add('btn-outline-light');
+          themeToggle && (themeToggle.textContent = '☀️ 淺色');
+        }
+        currentTheme = theme;
+        localStorage.setItem(THEME_KEY, theme);
+      }
+      applyTheme(currentTheme);
+      themeToggle?.addEventListener('click', () => {
+        applyTheme(currentTheme === 'dark' ? 'light' : 'dark');
+      });
+
+      // ===== 回到頂端按鈕 =====
+      const backBtn = document.getElementById('backToTop');
+      function toggleBackBtn() {
+        const show = window.scrollY > 160; // 超過 160px 才顯示
+        backBtn.classList.toggle('show', show);
+      }
+      window.addEventListener('scroll', toggleBackBtn);
+      window.addEventListener('load', toggleBackBtn);
+      backBtn.addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+
+      // ===== 導覽列內部連結平滑捲動 =====
+      document.querySelectorAll('a.nav-link[href^="#"]').forEach((a) => {
+        a.addEventListener('click', (e) => {
+          const id = a.getAttribute('href');
+          const target = document.querySelector(id);
+          if (target) {
+            e.preventDefault();
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        });
+      });
+
+      // ===== 三欄卡片：用 JS 動態產生 =====
+      const cards = [
+        { title: '快速上手', text: '用 container / row / col 快速做出 RWD 版面。', btn: '了解更多', href: '#features', variant: 'primary' },
+        { title: '一致設計', text: '大量元件（按鈕、卡片、表單…）視覺一致、省時省力。', btn: '查看元件', href: '#features', variant: 'primary' },
+        { title: '易於擴充', text: '再加入 Navbar、Modal、Tabs 等進階互動元件。', btn: '聯絡我們', href: '#contact', variant: 'outline-primary' }
+      ];
+      function createCard({ title, text, btn, href, variant = 'primary' }) {
+        const col = document.createElement('div');
+        col.className = 'col-12 col-md-6 col-lg-4';
+        const card = document.createElement('div');
+        card.className = 'card h-100 shadow-sm';
+        const body = document.createElement('div');
+        body.className = 'card-body';
+        const h3 = document.createElement('h3');
+        h3.className = 'h5';
+        const p = document.createElement('p');
+        p.className = 'text-secondary';
+        const a = document.createElement('a');
+        a.className = `btn btn-sm btn-${variant}`;
+        h3.textContent = title;
+        p.textContent = text;
+        a.href = href; a.textContent = btn;
+        body.append(h3, p, a); card.append(body); col.append(card);
+        return col;
+      }
+      const cardsRow = document.getElementById('cardsRow');
+      if (cardsRow) cards.forEach(item => cardsRow.appendChild(createCard(item)));
+
+      // ===== 表單驗證 + 成功訊息（示範用，不會送出到伺服器） =====
+      const form = document.getElementById('contactForm');
+      const successAlert = document.getElementById('successAlert');
+      if (form) {
+        form.addEventListener('submit', (event) => {
+          event.preventDefault();
+          if (!form.checkValidity()) { event.stopPropagation(); }
+          else { successAlert?.classList.remove('d-none'); form.reset(); }
+          form.classList.add('was-validated');
+        });
+      }
+    });
+  </script>
+</body>
+</html>
+
+<!-- =============================================== -->
+<!-- 附註：請把下列檔案放在專案根目錄（相對路徑）。          -->
+<!-- 1) ./favicon.ico                （16–32px 以上，通用）    -->
+<!-- 2) ./favicon.svg                （可選：向量圖標）        -->
+<!-- 3) ./apple-touch-icon.png       （180x180）               -->
+<!-- 4) ./og-image.jpg               （1200x630；< 2MB）       -->
+<!-- 5) ./site.webmanifest           （可選；見先前提供的範本）-->
